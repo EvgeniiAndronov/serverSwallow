@@ -56,7 +56,6 @@ func HandleWebSocket(c *gin.Context) {
 			break
 		}
 
-		create_c := 0
 		ids := make([]string, 0)
 
 		if len(onServerData) == 0 {
@@ -73,7 +72,6 @@ func HandleWebSocket(c *gin.Context) {
 				onServerData[i].TankY = message.TankY
 				onServerData[i].AnimateStatus = message.AnimateStatus
 				onServerData[i].AngleTank = message.AngleTank
-				create_c++
 			}
 			ids = append(ids, onServerData[i].IdUser)
 		}

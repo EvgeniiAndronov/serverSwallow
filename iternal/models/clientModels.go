@@ -26,9 +26,3 @@ type UserData struct {
 	AnimateStatus string  `json:"animateStatus"`
 	IsAlive       bool    `json:"isAlive"`
 }
-
-type Coordinates struct {
-	//gorm.Model
-	X float32 `json:"x"`
-	Y float32 `json:"y"`
-}
