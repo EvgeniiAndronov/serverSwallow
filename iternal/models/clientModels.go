@@ -26,3 +26,9 @@ type UserData struct {
 	AnimateStatus string  `json:"animateStatus"`
 	IsAlive       bool    `json:"isAlive"`
 }
+
+type Coordinates struct {
+	X  float32 `json:"x"`
+	Y  float32 `json:"y"`
+	Id string  `json:"id"`
+}

@@ -21,13 +21,16 @@ var (
 )
 
 func HandleInfoFromWebSocket(c *gin.Context) {
-
-	//db := NewDbConnection()
-	//res := db.Find(&models.UserData{})
 	c.JSON(
 		200,
 		onServerData,
 	)
+}
+
+func HandlerClearData(c *gin.Context) {
+
+	onServerData = onServerData[:0]
+	c.JSON(200, gin.H{"message": "cleared"})
 }
 
 func HandleWebSocket(c *gin.Context) {
@@ -57,6 +60,8 @@ func HandleWebSocket(c *gin.Context) {
 		}
 
 		ids := make([]string, 0)
+		bulletCoord := make([]models.Coordinates, 0)
+		tankCoord := make([]models.Coordinates, 0)
 
 		if len(onServerData) == 0 {
 			onServerData = append(onServerData, message)
@@ -74,6 +79,22 @@ func HandleWebSocket(c *gin.Context) {
 				onServerData[i].AngleTank = message.AngleTank
 			}
 			ids = append(ids, onServerData[i].IdUser)
+			bulletCoord = append(bulletCoord, models.Coordinates{onServerData[i].BulletX, onServerData[i].BulletY, onServerData[i].IdUser})
+			tankCoord = append(tankCoord, models.Coordinates{onServerData[i].TankX, onServerData[i].TankY, onServerData[i].IdUser})
+			//
+		}
+
+		for b := range bulletCoord {
+			for t := range tankCoord {
+				if CheckHit(bulletCoord[b].X, bulletCoord[b].Y, tankCoord[t].X, tankCoord[t].Y) {
+					for i := range onServerData {
+						if onServerData[i].IdUser == tankCoord[t].Id {
+							onServerData[i].IsAlive = false
+						}
+					}
+				}
+
+			}
 		}
 
 		if !slices.Contains(ids, message.IdUser) {

@@ -7,11 +7,11 @@ type Coor struct {
 	y float32
 }
 
-var shiftXb float32 = 2
-var shiftXt float32 = 2
+var shiftXb float32 = 10.5
+var shiftXt float32 = 32
 
-var shiftYb float32 = 2
-var shiftYt float32 = 2
+var shiftYb float32 = 10.5
+var shiftYt float32 = 32
 
 func CheckHit(bx float32, by float32, tx float32, ty float32) bool {
 	bulletC := Coor{bx, by}

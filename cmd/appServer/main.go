@@ -11,5 +11,7 @@ func main() {
 	router := gin.Default()
 	router.GET("/ws", server.HandleWebSocket)
 	router.GET("/", server.HandleInfoFromWebSocket)
+	router.GET("/clear", server.HandlerClearData)
+
 	router.Run(":8080")
 }
