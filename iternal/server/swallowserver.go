@@ -81,7 +81,6 @@ func HandleWebSocket(c *gin.Context) {
 			ids = append(ids, onServerData[i].IdUser)
 			bulletCoord = append(bulletCoord, models.Coordinates{onServerData[i].BulletX, onServerData[i].BulletY, onServerData[i].IdUser})
 			tankCoord = append(tankCoord, models.Coordinates{onServerData[i].TankX, onServerData[i].TankY, onServerData[i].IdUser})
-			//
 		}
 
 		for b := range bulletCoord {

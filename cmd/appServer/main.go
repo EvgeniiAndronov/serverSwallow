@@ -6,12 +6,7 @@ import (
 )
 
 func main() {
-	//server.SetupDatabase()
-
 	router := gin.Default()
-	router.GET("/ws", server.HandleWebSocket)
-	router.GET("/", server.HandleInfoFromWebSocket)
-	router.GET("/clear", server.HandlerClearData)
-
+	server.SetUpRouts(router)
 	router.Run(":8080")
 }
