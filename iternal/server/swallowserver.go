@@ -86,14 +86,15 @@ func HandleWebSocket(c *gin.Context) {
 
 		for b := range bulletCoord {
 			for t := range tankCoord {
-				if CheckHit(bulletCoord[b].X, bulletCoord[b].Y, tankCoord[t].X, tankCoord[t].Y) {
-					for i := range onServerData {
-						if onServerData[i].IdUser == tankCoord[t].Id {
-							onServerData[i].IsAlive = false
+				if bulletCoord[b].Id != tankCoord[t].Id {
+					if CheckHit(bulletCoord[b].X, bulletCoord[b].Y, tankCoord[t].X, tankCoord[t].Y) {
+						for ob := range onServerData {
+							if onServerData[ob].IdUser == bulletCoord[b].Id {
+								onServerData[ob].IsAlive = false
+							}
 						}
 					}
 				}
-
 			}
 		}
 
