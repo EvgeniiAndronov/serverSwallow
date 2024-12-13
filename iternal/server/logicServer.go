@@ -28,5 +28,4 @@ func CheckHit(bx float32, by float32, tx float32, ty float32) bool {
 	} else {
 		return false
 	}
-
 }

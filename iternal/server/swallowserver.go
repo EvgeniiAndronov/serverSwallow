@@ -28,7 +28,6 @@ func HandleInfoFromWebSocket(c *gin.Context) {
 }
 
 func HandlerClearData(c *gin.Context) {
-
 	onServerData = onServerData[:0]
 	c.JSON(200, gin.H{"message": "cleared"})
 }
@@ -41,7 +40,12 @@ func HandleWebSocket(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not upgrade to WebSocket"})
 		return
 	}
-	defer conn.Close()
+	defer func(conn *websocket.Conn) {
+		err := conn.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(conn)
 
 	for {
 		_, msg, err := conn.ReadMessage()
@@ -79,16 +83,33 @@ func HandleWebSocket(c *gin.Context) {
 				onServerData[i].AngleTank = message.AngleTank
 			}
 			ids = append(ids, onServerData[i].IdUser)
-			bulletCoord = append(bulletCoord, models.Coordinates{onServerData[i].BulletX, onServerData[i].BulletY, onServerData[i].IdUser})
-			tankCoord = append(tankCoord, models.Coordinates{onServerData[i].TankX, onServerData[i].TankY, onServerData[i].IdUser})
+			bulletCoord = append(
+				bulletCoord,
+				models.Coordinates{
+					X:  onServerData[i].BulletX,
+					Y:  onServerData[i].BulletY,
+					Id: onServerData[i].IdUser,
+				},
+			)
+			tankCoord = append(
+				tankCoord,
+				models.Coordinates{
+					X:  onServerData[i].TankX,
+					Y:  onServerData[i].TankY,
+					Id: onServerData[i].IdUser,
+				},
+			)
 		}
+
+		fmt.Printf("\n %+v \n", bulletCoord)
+		fmt.Printf("\n %+v \n", tankCoord)
 
 		for b := range bulletCoord {
 			for t := range tankCoord {
 				if bulletCoord[b].Id != tankCoord[t].Id {
 					if CheckHit(bulletCoord[b].X, bulletCoord[b].Y, tankCoord[t].X, tankCoord[t].Y) {
 						for ob := range onServerData {
-							if onServerData[ob].IdUser == bulletCoord[b].Id {
+							if onServerData[ob].IdUser == tankCoord[t].Id {
 								onServerData[ob].IsAlive = false
 							}
 						}
@@ -104,6 +125,9 @@ func HandleWebSocket(c *gin.Context) {
 		fmt.Printf("\n----%+v - \nonServerData----\n", onServerData)
 
 		response := fmt.Sprintf("%+v", onServerData)
-		go conn.WriteMessage(websocket.TextMessage, []byte(response))
+		err = conn.WriteMessage(websocket.TextMessage, []byte(response))
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }

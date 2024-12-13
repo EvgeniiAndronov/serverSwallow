@@ -23,5 +23,3 @@ func NewDbConnection() *gorm.DB {
 	}
 	return db
 }
-
-//func NewDataStore() *
