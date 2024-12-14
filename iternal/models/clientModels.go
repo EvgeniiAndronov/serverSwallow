@@ -6,7 +6,7 @@ type UserData struct {
 	TankY         float32 `json:"tankY"`
 	BulletX       float32 `json:"bulletX"`
 	BulletY       float32 `json:"bulletY"`
-	AngleTank     float64 `json:"angle"`
+	AngleTank     float32 `json:"angle"`
 	AnimateStatus string  `json:"animateStatus"`
 	IsAlive       bool    `json:"isAlive"`
 }
